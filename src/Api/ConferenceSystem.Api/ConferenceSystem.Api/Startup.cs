@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using ConferenceSystem.Api.Hubs;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,22 +16,22 @@ namespace ConferenceSystem.Api
 
 		public IConfiguration Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddCors(options =>
-			{
-				options.AddPolicy("CorsPolicy",
-					builder => builder.AllowAnyOrigin()
-						.AllowAnyMethod()
-						.AllowAnyHeader()
-						.AllowCredentials());
-			});
+			services.AddMvc();
 
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+			services.AddCors(options => options.AddPolicy("CorsPolicy",
+				builder =>
+				{
+					builder.AllowAnyMethod()
+						.AllowAnyHeader()
+						.WithOrigins("http://localhost:4200")
+						.AllowCredentials();
+				}));
+
+			services.AddSignalR();
 		}
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
 			if (env.IsDevelopment())
@@ -39,6 +40,10 @@ namespace ConferenceSystem.Api
 			}
 
 			app.UseCors("CorsPolicy");
+			app.UseSignalR(routes =>
+			{
+				routes.MapHub<ConferenceHub>("/conference");
+			});
 			app.UseMvc();
 		}
 	}
