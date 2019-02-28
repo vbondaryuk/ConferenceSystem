@@ -9,7 +9,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
   constructor(
     private authenticationService: AuthenticationService
-  ) {  }
+  ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req)

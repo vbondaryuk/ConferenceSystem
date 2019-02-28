@@ -3,8 +3,9 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {environment} from '../../../../environments/environment';
 import {UserRegistration} from '../models/user.registration';
+import {environment} from '../../../../environments/environment';
+import {UserCredential} from '../models/user.credential';
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
@@ -14,12 +15,12 @@ export class AuthenticationService {
     this.tokenSubject = new BehaviorSubject<string>(localStorage.getItem('jwt_token'));
   }
 
-  public login(userName: string, password: string) {
-    return this.http.post<any>(`${environment.apiUri}/auth/authenticate`, {userName, password})
+  public login(userCredential: UserCredential) {
+    return this.http.post<any>(`${environment.apiUri}/auth/authenticate`, userCredential)
       .pipe(map(this.authResponseMap));
   }
 
-  public register(userRegistration: UserRegistration): Observable<UserRegistration> {
+  public register(userRegistration: UserRegistration) {
     return this.http.post<any>(`${environment.apiUri}/auth/register`, userRegistration)
       .pipe(map(this.authResponseMap));
   }

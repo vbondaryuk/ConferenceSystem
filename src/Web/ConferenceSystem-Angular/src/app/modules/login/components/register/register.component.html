@@ -1,0 +1,12 @@
+<form formGroup="registerForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <input type="text" formControlName="email" placeholder="email" required/>
+  </div>
+  <div class="form-group">
+    <input type="password" formControlName="password" placeholder="password" required=""/>
+  </div>
+  <div class="form-group">
+    <button [disabled]="isloading">Register</button>
+  </div>
+  <p class="message">Already registered? <a routerLink="/login">Sign In</a></p>
+</form>
