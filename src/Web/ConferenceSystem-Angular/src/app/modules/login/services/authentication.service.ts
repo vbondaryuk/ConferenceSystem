@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {UserRegistration} from '../models/user.registration';
@@ -16,12 +16,12 @@ export class AuthenticationService {
   }
 
   public login(userCredential: UserCredential) {
-    return this.http.post<any>(`${environment.apiUri}/auth/authenticate`, userCredential)
+    return this.http.post<any>(`${environment.apiUri}/user/authenticate`, userCredential)
       .pipe(map(this.authResponseMap));
   }
 
   public register(userRegistration: UserRegistration) {
-    return this.http.post<any>(`${environment.apiUri}/auth/register`, userRegistration)
+    return this.http.post<any>(`${environment.apiUri}/user/register`, userRegistration)
       .pipe(map(this.authResponseMap));
   }
 
@@ -44,7 +44,8 @@ export class AuthenticationService {
 
   private authResponseMap = token => {
     if (token) {
-      localStorage.setItem('jwt_token', token);
+      localStorage.setItem('jwt_token', token.token);
+      localStorage.setItem('jwt_refreshToken', token.eefreshToken);
       this.tokenSubject.next(token);
     }
 

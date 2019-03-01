@@ -1,9 +1,15 @@
-﻿using ConferenceSystem.Api.Hubs;
+﻿using System.Threading.Tasks;
+using ConferenceSystem.Api.Application.Auth;
+using ConferenceSystem.Api.Application.JwtTokens;
+using ConferenceSystem.Api.Application.Users;
+using ConferenceSystem.Api.Hubs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ConferenceSystem.Api
 {
@@ -18,18 +24,58 @@ namespace ConferenceSystem.Api
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc();
+			var appSettingsSection = Configuration.GetSection("JWT");
+			services.Configure<JwtSettings>(appSettingsSection);
+			var jwtSettings = appSettingsSection.Get<JwtSettings>();
+
+			services
+				.AddAuthentication(x =>
+				{
+					x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+					x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				})
+				.AddJwtBearer(x =>
+				{
+					x.TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidateIssuer = true,
+						ValidateAudience = true,
+						ValidateLifetime = true,
+						ValidateIssuerSigningKey = true,
+						ValidIssuer = jwtSettings.Issuer,
+						ValidAudience = jwtSettings.Audience,
+						IssuerSigningKey = jwtSettings.IssuerSigningKey
+					};
+					x.Events = new JwtBearerEvents
+					{
+						OnAuthenticationFailed = context =>
+						{
+							if (context.Exception is SecurityTokenExpiredException)
+							{
+								context.Response.Headers.Add("Token-Expired", "true");
+							}
+
+							return Task.CompletedTask;
+						}
+					};
+				});
 
 			services.AddCors(options => options.AddPolicy("CorsPolicy",
 				builder =>
 				{
 					builder.AllowAnyMethod()
 						.AllowAnyHeader()
-						.WithOrigins("http://localhost:4200")
+						.WithOrigins(jwtSettings.Audience)
 						.AllowCredentials();
 				}));
 
 			services.AddSignalR();
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+
+			services.AddScoped<IAuthenticationManager, AuthenticationManager>();
+			services.AddScoped<ITokenService, TokenService>();
+			services.AddScoped<IUserService, UserService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -39,12 +85,10 @@ namespace ConferenceSystem.Api
 				app.UseDeveloperExceptionPage();
 			}
 
-			app.UseCors("CorsPolicy");
-			app.UseSignalR(routes =>
-			{
-				routes.MapHub<ConferenceHub>("/conference");
-			});
-			app.UseMvc();
+			app.UseCors("CorsPolicy")
+				.UseSignalR(routes => { routes.MapHub<ConferenceHub>("/conference"); })
+				.UseAuthentication()
+				.UseMvc();
 		}
 	}
 }
