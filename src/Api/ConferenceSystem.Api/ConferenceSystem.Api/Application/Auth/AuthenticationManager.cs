@@ -34,8 +34,16 @@ namespace ConferenceSystem.Api.Application.Auth
 			return new JwtToken(token, refreshToken.Token);
 		}
 
+		public async Task<JwtToken> RegisterAsync(CreateUserDto createUserDto)
+		{
+			var user = await _userService.AddAsync(createUserDto);
+			var token = _tokenService.CreateToken(user);
+			var refreshToken = _tokenService.GenerateRefreshToken(user);
+			await AddTokenAsync(user, refreshToken);
 
-
+			return new JwtToken(token, refreshToken.Token);
+		}
+		
 		public Task AddTokenAsync(User user, JwtRefreshToken jwtRefreshToken)
 		{
 			return Task.CompletedTask;

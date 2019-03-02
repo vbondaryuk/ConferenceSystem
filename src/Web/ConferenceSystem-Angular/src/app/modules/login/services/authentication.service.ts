@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 
 import {UserRegistration} from '../models/user.registration';
 import {environment} from '../../../../environments/environment';
-import {UserCredential} from '../models/user.credential';
+import {UserLogin} from '../models/user.login';
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
@@ -15,7 +15,7 @@ export class AuthenticationService {
     this.tokenSubject = new BehaviorSubject<string>(localStorage.getItem('jwt_token'));
   }
 
-  public login(userCredential: UserCredential) {
+  public login(userCredential: UserLogin) {
     return this.http.post<any>(`${environment.apiUri}/user/authenticate`, userCredential)
       .pipe(map(this.authResponseMap));
   }
@@ -45,8 +45,8 @@ export class AuthenticationService {
   private authResponseMap = token => {
     if (token) {
       localStorage.setItem('jwt_token', token.token);
-      localStorage.setItem('jwt_refreshToken', token.eefreshToken);
-      this.tokenSubject.next(token);
+      localStorage.setItem('jwt_refreshToken', token.refreshToken);
+      this.tokenSubject.next(token.token);
     }
 
     return token;

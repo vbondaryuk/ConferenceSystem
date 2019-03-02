@@ -1,6 +1,6 @@
-import {UserCredential} from './user.credential';
+import {UserLogin} from './user.login';
 
-export interface UserRegistration extends UserCredential {
+export interface UserRegistration extends UserLogin {
   firstName: string;
   lastName: string;
 }

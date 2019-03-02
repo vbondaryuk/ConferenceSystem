@@ -6,6 +6,7 @@ namespace ConferenceSystem.Api.Application.Users
 	{
 		Task<User> GetAsync(string userEmail);
 		Task<User> GetAsync(int userId);
+		Task<User> AddAsync(CreateUserDto createUserDto);
 		bool ValidatePassword(User user, string password);
 	}
 }

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UserCredential} from '../../models/user.credential';
+import {UserLogin} from '../../models/user.login';
 import {AuthenticationService} from '../../services/authentication.service';
 import {NgForm} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -11,7 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 
 export class LoginComponent implements OnInit {
-  private useCredential: UserCredential = {email: '', password: ''};
+  private userLogin: UserLogin = {email: '', password: ''};
   private submitted = false;
   private loading = false;
   private returnUrl: string;
@@ -25,6 +25,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.authenticationService.isLoggedIn) {
+      this.router.navigate(['/']);
+    }
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
   }
 
@@ -36,7 +39,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    this.authenticationService.login(this.useCredential)
+    this.authenticationService.login(this.userLogin)
       .subscribe(() => {
           this.router.navigate([this.returnUrl]);
         },

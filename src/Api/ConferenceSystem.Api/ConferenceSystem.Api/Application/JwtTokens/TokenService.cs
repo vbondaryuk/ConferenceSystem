@@ -27,8 +27,10 @@ namespace ConferenceSystem.Api.Application.JwtTokens
 				{
 					new Claim(ClaimTypes.Name, user.Id.ToString())
 				}),
-				Expires = DateTime.UtcNow.AddDays(1),
+				Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessExpireMinutes),
 				NotBefore = DateTime.UtcNow,
+				Issuer = _jwtSettings.Issuer,
+				Audience = _jwtSettings.Audience,
 				SigningCredentials = new SigningCredentials(_jwtSettings.IssuerSigningKey,
 					SecurityAlgorithms.HmacSha256Signature)
 			};

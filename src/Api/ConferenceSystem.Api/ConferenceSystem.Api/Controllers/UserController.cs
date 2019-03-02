@@ -29,5 +29,17 @@ namespace ConferenceSystem.Api.Controllers
 
 			return Ok(jwtToken);
 		}
+
+		[AllowAnonymous]
+		[HttpPost("register")]
+		public async Task<IActionResult> Register([FromBody]CreateUserDto createUserDto)
+		{
+			var jwtToken = await _authenticationManager.RegisterAsync(createUserDto);
+
+			if (jwtToken == null)
+				return BadRequest(new { message = "Username or password is incorrect" });
+
+			return Ok(jwtToken);
+		}
 	}
 }

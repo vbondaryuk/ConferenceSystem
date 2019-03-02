@@ -56,6 +56,16 @@ namespace ConferenceSystem.Api
 							}
 
 							return Task.CompletedTask;
+						},
+						OnMessageReceived = context =>
+						{
+							if (context.Request.Path.Value.StartsWith("/conference") &&
+							    context.Request.Query.TryGetValue("token", out var token))
+							{
+								context.Token = token;
+							}
+
+							return Task.CompletedTask;
 						}
 					};
 				});
@@ -86,8 +96,8 @@ namespace ConferenceSystem.Api
 			}
 
 			app.UseCors("CorsPolicy")
-				.UseSignalR(routes => { routes.MapHub<ConferenceHub>("/conference"); })
 				.UseAuthentication()
+				.UseSignalR(routes => { routes.MapHub<ConferenceHub>("/conference"); })
 				.UseMvc();
 		}
 	}

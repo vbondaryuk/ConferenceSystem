@@ -9,7 +9,7 @@ namespace ConferenceSystem.Api.Application.Users
 {
 	public class UserService : IUserService
 	{
-		private List<User> _users = new List<User>
+		private readonly List<User> _users = new List<User>
 		{
 			new User
 			{
@@ -29,11 +29,15 @@ namespace ConferenceSystem.Api.Application.Users
 			return Task.FromResult(_users.SingleOrDefault(x => x.Id == userId));
 		}
 
-		public Task<User> AddAsync(CreateUserDto createUserDto)
+		public async Task<User> AddAsync(CreateUserDto createUserDto)
 		{
+			var user = await GetAsync(createUserDto.Email);
+			if(user != null)
+				throw new Exception("User already exists");
+
 			var salt = CreateSalt();
 			var password = CreatePassword(createUserDto.Password, salt);
-			var user = new User
+			user = new User
 			{
 				Email = createUserDto.Email,
 				FirstName = createUserDto.FirstName,
@@ -43,7 +47,7 @@ namespace ConferenceSystem.Api.Application.Users
 			};
 			_users.Add(user);
 
-			return Task.FromResult(user);
+			return user;
 		}
 
 		public bool ValidatePassword(User user, string password)

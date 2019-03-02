@@ -9,5 +9,6 @@ namespace ConferenceSystem.Api.Application.Auth
 		Task<JwtToken> Authenticate(LoginDto loginDto);
 		Task AddTokenAsync(User user, JwtRefreshToken jwtRefreshToken);
 		Task<JwtRefreshToken> GetTokenAsync(string token);
+		Task<JwtToken> RegisterAsync(CreateUserDto createUserDto);
 	}
 }
