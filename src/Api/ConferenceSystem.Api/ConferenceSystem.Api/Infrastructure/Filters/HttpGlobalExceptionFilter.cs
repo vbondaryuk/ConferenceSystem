@@ -6,43 +6,43 @@ using Microsoft.Extensions.Logging;
 
 namespace ConferenceSystem.Api.Infrastructure.Filters
 {
-	public class HttpGlobalExceptionFilter : IExceptionFilter
-	{
-		private readonly IHostingEnvironment _environment;
-		private readonly ILogger<HttpGlobalExceptionFilter> _logger;
+    public class HttpGlobalExceptionFilter : IExceptionFilter
+    {
+        private readonly IHostingEnvironment _environment;
+        private readonly ILogger<HttpGlobalExceptionFilter> _logger;
 
-		public HttpGlobalExceptionFilter(IHostingEnvironment environment, ILogger<HttpGlobalExceptionFilter> logger)
-		{
-			_environment = environment;
-			_logger = logger;
-		}
+        public HttpGlobalExceptionFilter(IHostingEnvironment environment, ILogger<HttpGlobalExceptionFilter> logger)
+        {
+            _environment = environment;
+            _logger = logger;
+        }
 
-		public void OnException(ExceptionContext context)
-		{
-			_logger.LogError(new EventId(context.Exception.HResult),
-				context.Exception,
-				context.Exception.Message);
+        public void OnException(ExceptionContext context)
+        {
+            _logger.LogError(new EventId(context.Exception.HResult),
+                context.Exception,
+                context.Exception.Message);
 
-			var json = new JsonErrorResponse
-			{
-				Messages = new[] { "An error occurred." }
-			};
+            var json = new JsonErrorResponse
+            {
+                Messages = new[] {"An error occurred."}
+            };
 
-			if (_environment.IsDevelopment())
-			{
-				json.DeveloperMessage = context.Exception;
-			}
+            if (_environment.IsDevelopment())
+            {
+                json.DeveloperMessage = context.Exception;
+            }
 
-			context.Result = new InternalServerErrorObjectResult(json);
-			context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-			context.ExceptionHandled = true;
-		}
+            context.Result = new InternalServerErrorObjectResult(json);
+            context.HttpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+            context.ExceptionHandled = true;
+        }
 
-		private class JsonErrorResponse
-		{
-			public string[] Messages { get; set; }
+        private class JsonErrorResponse
+        {
+            public string[] Messages { get; set; }
 
-			public object DeveloperMessage { get; set; }
-		}
-	}
+            public object DeveloperMessage { get; set; }
+        }
+    }
 }
