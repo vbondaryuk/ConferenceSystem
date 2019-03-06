@@ -11,5 +11,6 @@ namespace ConferenceSystem.Api.Application.JwtTokens
         public long AccessExpireMinutes { get; set; }
         public long RefreshExpireMinutes { get; set; }
         public SymmetricSecurityKey IssuerSigningKey => new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey));
+
     }
 }

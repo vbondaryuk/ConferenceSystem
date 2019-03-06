@@ -9,10 +9,11 @@ namespace ConferenceSystem.Api.Application.Users
 {
     public class UserService : IUserService
     {
-        private readonly List<User> _users = new List<User>
+        private static readonly List<User> Users = new List<User>
         {
             new User
             {
+                Id = 1,
                 Email = "test@test",
                 Password = CreatePassword("123456", Array.Empty<byte>()),
                 Salt = Array.Empty<byte>()
@@ -21,12 +22,12 @@ namespace ConferenceSystem.Api.Application.Users
 
         public Task<User> GetAsync(string userEmail)
         {
-            return Task.FromResult(_users.SingleOrDefault(x => x.Email == userEmail));
+            return Task.FromResult(Users.SingleOrDefault(x => x.Email == userEmail));
         }
 
         public Task<User> GetAsync(int userId)
         {
-            return Task.FromResult(_users.SingleOrDefault(x => x.Id == userId));
+            return Task.FromResult(Users.SingleOrDefault(x => x.Id == userId));
         }
 
         public async Task<User> AddAsync(CreateUserDto createUserDto)
@@ -35,17 +36,20 @@ namespace ConferenceSystem.Api.Application.Users
             if (user != null)
                 throw new Exception("User already exists");
 
+            int id = Users.Max(x => x.Id) + 1;//temporary solution while we do not use DataBase
+
             var salt = CreateSalt();
             var password = CreatePassword(createUserDto.Password, salt);
             user = new User
             {
+                Id = id,
                 Email = createUserDto.Email,
                 FirstName = createUserDto.FirstName,
                 LastName = createUserDto.LastName,
                 Password = password,
                 Salt = salt
             };
-            _users.Add(user);
+            Users.Add(user);
 
             return user;
         }

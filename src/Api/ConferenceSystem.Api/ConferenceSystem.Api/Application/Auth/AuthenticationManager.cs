@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ConferenceSystem.Api.Application.JwtTokens;
 using ConferenceSystem.Api.Application.Users;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ConferenceSystem.Api.Application.Auth
 {
@@ -27,31 +29,36 @@ namespace ConferenceSystem.Api.Application.Auth
             if (!isValid)
                 return null;
 
-            var token = _tokenService.CreateToken(user);
-            var refreshToken = _tokenService.GenerateRefreshToken(user);
-            await AddTokenAsync(user, refreshToken);
-
-            return new JwtToken(token, refreshToken.Token);
+            return await GenerateToken(user);
         }
 
         public async Task<JwtToken> RegisterAsync(CreateUserDto createUserDto)
         {
             var user = await _userService.AddAsync(createUserDto);
+
+            return await GenerateToken(user);
+        }
+
+        public async Task<JwtToken> RefreshToken(JwtToken jwtToken)
+        {
+            var userId = _tokenService.GetUserIdFromExpiredToken(jwtToken.Token);
+            var refreshToken = await _tokenService.GetRefreshTokenAsync(userId, jwtToken.RefreshToken);
+            if(refreshToken == null || refreshToken.Expires < DateTime.UtcNow)
+                throw new SecurityTokenException("Invalid token");
+
+            User user = await _userService.GetAsync(userId);
+            await _tokenService.RemoveRefreshTokenAsync(refreshToken);
+
+            return await GenerateToken(user);
+        }
+
+        private async Task<JwtToken> GenerateToken(User user)
+        {
             var token = _tokenService.CreateToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken(user);
-            await AddTokenAsync(user, refreshToken);
+            await _tokenService.AddRefreshTokenAsync(refreshToken);
 
             return new JwtToken(token, refreshToken.Token);
-        }
-
-        public Task AddTokenAsync(User user, JwtRefreshToken jwtRefreshToken)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task<JwtRefreshToken> GetTokenAsync(string token)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
