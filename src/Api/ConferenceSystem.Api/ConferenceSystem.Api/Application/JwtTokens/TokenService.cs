@@ -29,7 +29,7 @@ namespace ConferenceSystem.Api.Application.JwtTokens
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessExpireMinutes),
                 NotBefore = DateTime.UtcNow,
@@ -75,7 +75,7 @@ namespace ConferenceSystem.Api.Application.JwtTokens
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
                 throw new SecurityTokenException("Invalid token");
 
-            var userClaim = principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
+            var userClaim = principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             if(userClaim == null)
                 throw new SecurityTokenException("Invalid token");
             var userId = Convert.ToInt32(userClaim);
@@ -101,7 +101,5 @@ namespace ConferenceSystem.Api.Application.JwtTokens
             JwtRefreshTokens.Remove(token);
             return Task.CompletedTask;
         }
-
-
     }
 }

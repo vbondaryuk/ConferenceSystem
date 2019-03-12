@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {UserLogin} from '../../models/user.login';
-import {AuthenticationService} from '../../services/authentication.service';
+import {UserLogin} from '../../../../shared/models/user.login';
+import {AuthenticationService} from '../../../../shared/services/authentication.service';
 import {NgForm} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -21,8 +21,7 @@ export class LoginComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private route: ActivatedRoute,
     private router: Router
-  ) {
-  }
+  ) {  }
 
   ngOnInit() {
     if (this.authenticationService.isLoggedIn) {

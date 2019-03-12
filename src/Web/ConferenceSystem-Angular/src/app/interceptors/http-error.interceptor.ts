@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {AuthenticationService} from '../modules/login/services/authentication.service';
+import {AuthenticationService} from '../shared/services/authentication.service';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
@@ -18,7 +18,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           this.authenticationService.logout();
         }
 
-        const error = err.error.message || err.statusText;
+        const error = err.statusText || err.error.message;
         return throwError(error);
       }));
   }

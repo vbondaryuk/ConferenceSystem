@@ -1,55 +1,56 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using ConferenceSystem.Api.Application.Auth;
-using ConferenceSystem.Api.Application.JwtTokens;
 using ConferenceSystem.Api.Application.Users;
+using ConferenceSystem.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConferenceSystem.Api.Controllers
 {
     [Authorize]
-    [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
+        private readonly IUserService _userService;
         private readonly IAuthenticationManager _authenticationManager;
 
-        public UserController(IAuthenticationManager authenticationManager)
+        public UserController(IUserService userService,
+            IAuthenticationManager authenticationManager)
         {
+            _userService = userService;
             _authenticationManager = authenticationManager;
         }
 
-        [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] LoginDto loginDto)
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> UserInfo()
         {
-            var jwtToken = await _authenticationManager.Authenticate(loginDto);
+            var user = await _authenticationManager.GetCurrentUser();
+            var userModel = Map(user);
 
-            if (jwtToken == null)
-                return BadRequest(new {message = "Username or password is incorrect"});
-
-            return Ok(jwtToken);
+            return Ok(userModel);
         }
 
-        [AllowAnonymous]
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
+        [HttpGet]
+        [Route("items")]
+        public async Task<IActionResult> Get()
         {
-            var jwtToken = await _authenticationManager.RegisterAsync(createUserDto);
+            var users = await _userService.GetAsync();
+            var userModels = users.Select(Map);
 
-            if (jwtToken == null)
-                return BadRequest(new {message = "Username or password is incorrect"});
-
-            return Ok(jwtToken);
+            return Ok(userModels);
         }
 
-        [AllowAnonymous]
-        [HttpPost("refresh")]
-        public async Task<IActionResult> Register([FromBody] JwtToken jwtToken)
+        public static UserViewModel Map(User user)
         {
-            jwtToken = await _authenticationManager.RefreshToken(jwtToken);
-
-            return Ok(jwtToken);
+            return new UserViewModel
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
         }
     }
 }

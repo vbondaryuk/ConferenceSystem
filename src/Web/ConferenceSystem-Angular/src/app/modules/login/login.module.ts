@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {LoginComponent} from './components/login/login.component';
 import {RegisterComponent} from './components/register/register.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {routing} from './login.routing';
+import {LoggingRoutingModule} from './login-routing.module';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,7 @@ import {routing} from './login.routing';
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    routing
+    LoggingRoutingModule
   ],
 })
 export class LoginModule {

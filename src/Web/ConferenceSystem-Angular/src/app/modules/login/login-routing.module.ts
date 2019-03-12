@@ -1,11 +1,18 @@
 import {RegisterComponent} from './components/register/register.component';
 import {RouterModule, Routes} from '@angular/router';
-import {ModuleWithProviders} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {LoginComponent} from './components/login/login.component';
 
-const appRoutes: Routes = [
+const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'login', component: LoginComponent}
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forChild(appRoutes);
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class LoggingRoutingModule {
+}
+
+

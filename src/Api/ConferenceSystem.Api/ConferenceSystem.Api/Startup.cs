@@ -86,6 +86,7 @@ namespace ConferenceSystem.Api
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddHttpContextAccessor();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

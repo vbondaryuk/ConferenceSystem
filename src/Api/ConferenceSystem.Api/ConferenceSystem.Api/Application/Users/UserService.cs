@@ -15,10 +15,26 @@ namespace ConferenceSystem.Api.Application.Users
             {
                 Id = 1,
                 Email = "test@test",
+                FirstName = "FirstName",
+                LastName = "LastName",
+                Password = CreatePassword("123456", Array.Empty<byte>()),
+                Salt = Array.Empty<byte>()
+            },
+            new User
+            {
+                Id = 2,
+                Email = "test_2@test",
+                FirstName = "FirstName_2",
+                LastName = "LastName_2",
                 Password = CreatePassword("123456", Array.Empty<byte>()),
                 Salt = Array.Empty<byte>()
             }
         };
+
+        public Task<IEnumerable<User>> GetAsync()
+        {
+            return Task.FromResult<IEnumerable<User>>(Users);
+        }
 
         public Task<User> GetAsync(string userEmail)
         {

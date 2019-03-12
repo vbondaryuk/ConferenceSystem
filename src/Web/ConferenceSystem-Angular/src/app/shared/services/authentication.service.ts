@@ -4,7 +4,7 @@ import {BehaviorSubject} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {UserRegistration} from '../models/user.registration';
-import {environment} from '../../../../environments/environment';
+import {environment} from '../../../environments/environment';
 import {UserLogin} from '../models/user.login';
 
 @Injectable({providedIn: 'root'})
@@ -16,12 +16,12 @@ export class AuthenticationService {
   }
 
   public login(userCredential: UserLogin) {
-    return this.http.post<any>(`${environment.apiUri}/user/authenticate`, userCredential)
+    return this.http.post<any>(`${environment.apiUri}/auth/authenticate`, userCredential)
       .pipe(map(this.authResponseMap));
   }
 
   public register(userRegistration: UserRegistration) {
-    return this.http.post<any>(`${environment.apiUri}/user/register`, userRegistration)
+    return this.http.post<any>(`${environment.apiUri}/auth/register`, userRegistration)
       .pipe(map(this.authResponseMap));
   }
 
@@ -31,6 +31,7 @@ export class AuthenticationService {
 
   public logout() {
     localStorage.removeItem('jwt_token');
+    localStorage.removeItem('jwt_refreshToken');
     this.tokenSubject.next(null);
   }
 
