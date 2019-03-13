@@ -29,7 +29,8 @@ namespace ConferenceSystem.Api.Application.JwtTokens
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessExpireMinutes),
                 NotBefore = DateTime.UtcNow,

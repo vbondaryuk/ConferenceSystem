@@ -1,3 +1,32 @@
+<!--<p>selected user: {{(selectedUserSubject | async)?.firstName}}</p>-->
+<div class="flex-wrapper channel" *ngIf="channel">
+  <div class="channel-header">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAG6SURBVFhH7ZW7Sh5BGEB/CVgoMYWakD6NYpE38NJYmZgg5CnECwERq2AVxedQKzUWPkE6SUJab9ilMKJBooVRzxl2YMF/87s6PySwBw7MfPPNN7sze6lVVPyPdOM8fsGzTNvGurCpjOEvvC7wBN9iU3DxK3ShNRzA9kzbxhwz5w0m5SnGO39voIAZNOcUkx6H52vh9dD7O5/Q3A+hl4hvaFG3uhGDaO7X0EtE3H7PuxGP0VznJMOnu+wFHIdeInzPLer2NiIewXboJWIOLVrmIZwNvUQ8w59oYV+1IlzUnCP01U2KX7hLdIENdKs9bx3CTXTMnNfYFPwa/kEXqqdjTfsUv8I9rLdw3l0cwWS04CLGBS5wEnsw/gt6s5hj5vg/+IjOfTBLaNFz/J21V7EVI7aNOWaOubYX8EGMYiw6jP0YP0pb2JZp25hj5pgbL8Kjuxfe1SFaZNxAxkv8gcY/Z9o25lhkAo3vY3637sw7tMB3fGQgxws8QMfVtrE8znGu4749pVlBJ0+F3m2eowuo7XpMozWWQ68kbp2TfcKL6Mwsog+tsRN6JYlPfEfo3Y8naA1rVVT8i9RqN5sJjo2Z1ZizAAAAAElFTkSuQmCC" />
+    <aside>Channel: {{channel?.firstName}}</aside>
+  </div>
+  <div class="channel-history">
+    <div *ngFor="let message of messages" class="message">
+      <div [ngClass]="message.sender === user.email ? 'message-sent' : 'message-received'">
+        <small class="message-date">{{message.sendDate | date: short}}</small>
+        <div class="message-data">{{message.message}}</div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="exception" class="text-danger">{{exception}}</div>
+  <div class="message-input">
+    <form #f="ngForm" (ngSubmit)="sendMessage(f)">
+      <div class="input-group mb-1">
+        <textarea type="text" class="form-control" placeholder="your message..." name="message"
+                  ngModel rows="3" maxlength="1000"></textarea>
+        <div class="input-group-append">
+          <button>Send</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 <!--<div class="container-fluid">-->
 
 <!--<h1>Send some basic messages</h1>-->

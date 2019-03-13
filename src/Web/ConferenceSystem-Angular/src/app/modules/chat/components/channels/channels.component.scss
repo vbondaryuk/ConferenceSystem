@@ -1,30 +1,31 @@
 .flex-wrapper {
   display: flex;
   flex-direction: row;
-  position: fixed;
   left: 0px;
-  height: 100vh;
+  height: 100%;
 }
 
 .channels {
   background-color: #f4f5f7;
+  flex-grow: 1;
 }
 
-.selected-channel{
+.selected-channel {
   background: #4CAF50;
   width: 100%;
   border: 0;
   color: #FFFFFF;
-  cursor: pointer;
 }
 
-.channel{
+.channel {
   display: flex;
   align-items: center;
   width: 100%;
   padding: 20px 15px;
+  cursor: pointer;
 }
-img{
+
+img {
   border-radius: 25px;
   background-color: #f4f5f7;
   margin: 0 6px;

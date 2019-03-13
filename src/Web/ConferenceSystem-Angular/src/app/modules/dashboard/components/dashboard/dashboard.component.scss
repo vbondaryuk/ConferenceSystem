@@ -1,0 +1,13 @@
+@import '~bootstrap/scss/functions', '~bootstrap/scss/variables';
+
+.chat {
+  display: flex;
+  height: calc(100vh - #{$nav-link-height} - #{$nav-link-padding-y * 2});
+}
+
+app-channels {
+  flex: 1;
+}
+app-dialog {
+  flex: 4;
+}

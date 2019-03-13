@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
   loggedIn: boolean;
   user: User;
 

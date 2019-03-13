@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../../../shared/services/user.service';
 import {User} from '../../../../shared/models/user';
-import {BehaviorSubject} from 'rxjs';
+import {ChatService} from '../../services/chat.service';
 
 @Component({
   selector: 'app-channels',
@@ -11,9 +11,10 @@ import {BehaviorSubject} from 'rxjs';
 export class ChannelsComponent implements OnInit {
   private users: User[];
   private selectedUser: User;
-  public selectedUserSubject: BehaviorSubject<User> = new BehaviorSubject(null);
 
-  constructor(private userService: UserService) {
+  constructor(
+    private chatService: ChatService,
+    private userService: UserService) {
   }
 
   ngOnInit() {
@@ -22,7 +23,7 @@ export class ChannelsComponent implements OnInit {
   }
 
   onSelectUser(user: User) {
+    this.chatService.channel = user;
     this.selectedUser = user;
-    this.selectedUserSubject.next(user);
   }
 }
