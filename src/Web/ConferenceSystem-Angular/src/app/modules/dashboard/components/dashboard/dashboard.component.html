@@ -4,8 +4,8 @@
     <a class="nav-item nav-link" href="#" (click)="logout()">Logout</a>
   </div>
 </nav>
-<div class="chat">
-  <app-channels></app-channels>
+<div class="chat" *ngIf="user">
+  <app-channels [user]="user"></app-channels>
   <app-dialog [user]="user"></app-dialog>
 </div>
 

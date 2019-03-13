@@ -1,9 +1,13 @@
 <div class="flex-wrapper">
   <div class="channels">
-    <div class="channel"*ngFor="let user of users" (click)="onSelectUser(user)"
-         [ngClass]="user === selectedUser ? 'selected-channel' : ''">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAG6SURBVFhH7ZW7Sh5BGEB/CVgoMYWakD6NYpE38NJYmZgg5CnECwERq2AVxedQKzUWPkE6SUJab9ilMKJBooVRzxl2YMF/87s6PySwBw7MfPPNN7sze6lVVPyPdOM8fsGzTNvGurCpjOEvvC7wBN9iU3DxK3ShNRzA9kzbxhwz5w0m5SnGO39voIAZNOcUkx6H52vh9dD7O5/Q3A+hl4hvaFG3uhGDaO7X0EtE3H7PuxGP0VznJMOnu+wFHIdeInzPLer2NiIewXboJWIOLVrmIZwNvUQ8w59oYV+1IlzUnCP01U2KX7hLdIENdKs9bx3CTXTMnNfYFPwa/kEXqqdjTfsUv8I9rLdw3l0cwWS04CLGBS5wEnsw/gt6s5hj5vg/+IjOfTBLaNFz/J21V7EVI7aNOWaOubYX8EGMYiw6jP0YP0pb2JZp25hj5pgbL8Kjuxfe1SFaZNxAxkv8gcY/Z9o25lhkAo3vY3637sw7tMB3fGQgxws8QMfVtrE8znGu4749pVlBJ0+F3m2eowuo7XpMozWWQ68kbp2TfcKL6Mwsog+tsRN6JYlPfEfo3Y8naA1rVVT8i9RqN5sJjo2Z1ZizAAAAAElFTkSuQmCC" />
-      <aside>{{user.firstName}} {{user.lastName}}</aside>
+    <div class="channel" *ngFor="let channel of channels" (click)="onSelectChannel(channel)"
+         [ngClass]="channel.id === selectedChannel?.id ? 'selected-channel' : ''">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAG6SURBVFhH7ZW7Sh5BGEB/CVgoMYWakD6NYpE38NJYmZgg5CnECwERq2AVxedQKzUWPkE6SUJab9ilMKJBooVRzxl2YMF/87s6PySwBw7MfPPNN7sze6lVVPyPdOM8fsGzTNvGurCpjOEvvC7wBN9iU3DxK3ShNRzA9kzbxhwz5w0m5SnGO39voIAZNOcUkx6H52vh9dD7O5/Q3A+hl4hvaFG3uhGDaO7X0EtE3H7PuxGP0VznJMOnu+wFHIdeInzPLer2NiIewXboJWIOLVrmIZwNvUQ8w59oYV+1IlzUnCP01U2KX7hLdIENdKs9bx3CTXTMnNfYFPwa/kEXqqdjTfsUv8I9rLdw3l0cwWS04CLGBS5wEnsw/gt6s5hj5vg/+IjOfTBLaNFz/J21V7EVI7aNOWaOubYX8EGMYiw6jP0YP0pb2JZp25hj5pgbL8Kjuxfe1SFaZNxAxkv8gcY/Z9o25lhkAo3vY3637sw7tMB3fGQgxws8QMfVtrE8znGu4749pVlBJ0+F3m2eowuo7XpMozWWQ68kbp2TfcKL6Mwsog+tsRN6JYlPfEfo3Y8naA1rVVT8i9RqN5sJjo2Z1ZizAAAAAElFTkSuQmCC"/>
+      <div>
+        <aside>{{channel.name}}</aside>
+        <span class="dot" [ngClass]="channel.online ? 'online' : 'offline'"></span>
+        <span class="status">{{channel.online ? 'online' : 'offline'}}</span>
+      </div>
     </div>
   </div>
 </div>

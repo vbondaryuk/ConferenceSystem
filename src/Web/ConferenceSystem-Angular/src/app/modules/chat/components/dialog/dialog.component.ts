@@ -1,11 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import * as signalR from '@aspnet/signalr';
-import {HubConnection} from '@aspnet/signalr';
-import {AuthenticationService} from '../../../../shared/services/authentication.service';
 import {ChatService} from '../../services/chat.service';
 import {User} from '../../../../shared/models/user';
 import {Message} from '../../models/message';
 import {NgForm} from '@angular/forms';
+import {Channel} from '../../models/channel';
 
 @Component({
   selector: 'app-dialog',
@@ -13,11 +11,8 @@ import {NgForm} from '@angular/forms';
   styleUrls: ['./dialog.component.scss']
 })
 export class DialogComponent implements OnInit {
-
-  private hubConnection: HubConnection | undefined;
-  private connected: boolean;
   private messages: Message[] = [];
-  private channel: User;
+  private channel: Channel;
   private exception: string;
 
   @Input()
@@ -25,56 +20,35 @@ export class DialogComponent implements OnInit {
 
 
   constructor(
-    private chatService: ChatService,
-    private authenticationService: AuthenticationService) {
+    private chatService: ChatService) {
     chatService.channel$.subscribe(channel => {
       this.messages = [];
       this.channel = channel;
     });
+    chatService.message$.subscribe(message => {
+      if (message.sender === this.channel.id) {
+        this.messages.push(message);
+      }
+    });
   }
 
   ngOnInit() {
-    this.startSignalR();
   }
 
   public sendMessage(messageForm: NgForm): void {
     const messageText = messageForm.value.message;
     messageForm.resetForm();
-
+    if (!messageText || messageText.trim().length === 0) {
+      return;
+    }
     const message: Message = {
       message: messageText,
-      recipient: this.channel.email,
+      recipient: this.channel.id,
       sendDate: new Date(),
       sender: this.user.email
     };
 
-    if (this.hubConnection) {
-      this.hubConnection.send('sendMessage', message);
-    }
+    this.chatService.sendMessage(message);
     this.messages.push(message);
-  }
-
-  private startSignalR() {
-    const token = this.authenticationService.token;
-    if (!token) {
-      return;
-    }
-
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`http://localhost:4201/conference?token=${token}`)
-      .configureLogging(signalR.LogLevel.Information)
-      .build();
-
-    this.hubConnection.start().catch(err => console.error(err.toString()));
-
-    this.hubConnection.on('receiveException', (exception: string) => {
-      this.exception = exception;
-    });
-
-    this.hubConnection.on('receiveMessage', (message: Message) => {
-      this.messages.push(message);
-    });
-
-    this.connected = true;
   }
 }

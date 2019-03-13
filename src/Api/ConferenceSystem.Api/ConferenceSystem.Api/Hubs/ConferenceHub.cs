@@ -13,24 +13,29 @@ namespace ConferenceSystem.Api.Hubs
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ConferenceHub : Hub
     {
-        private static ConcurrentDictionary<string, string> ConnectedClients = new ConcurrentDictionary<string, string>();
+        private static readonly ConcurrentDictionary<string, string> ConnectedClients = new ConcurrentDictionary<string, string>();
 
         public async Task SendMessage(MessageViewModel message)
         {
             var recipient = message.Recipient;
-            if(!ConnectedClients.TryGetValue(recipient, out string connectionId))
+            if(ConnectedClients.TryGetValue(recipient, out string connectionId))
             {
-                await Clients.Caller.SendAsync("ReceiveException", "user is not connected");
+                await Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
             }
-
-            
-            await Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
         }
-       
+
+        public async Task RequestConnectedClients()
+        {
+            var clients = ConnectedClients.Keys;
+            await Clients.Caller.SendAsync("connectedUsers", clients);
+        }
+
         public override Task OnConnectedAsync()
         {
             var email = Context.User.FindFirstValue(ClaimTypes.Email);
             ConnectedClients.TryAdd(email, Context.ConnectionId);
+            _ = Clients.All.SendAsync("OnConnectedUser", email);
+
             return Task.CompletedTask;
         }
 
@@ -40,6 +45,8 @@ namespace ConferenceSystem.Api.Hubs
         {
             var email = Context.User.FindFirstValue(ClaimTypes.Email);
             ConnectedClients.TryRemove(email, out _);
+            _ = Clients.All.SendAsync("OnDisconnectedUser", email);
+
             return Task.CompletedTask;
         }
     }
