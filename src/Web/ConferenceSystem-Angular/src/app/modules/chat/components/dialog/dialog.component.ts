@@ -30,30 +30,6 @@ export class DialogComponent implements OnInit {
     chatService.channel$.subscribe(channel => {
       this.messages = [];
       this.channel = channel;
-      // this.messages.push({
-      //   message: 'asfasfasfasf',
-      //   recipient: this.channel.email,
-      //   sendDate: new Date(),
-      //   sender: this.user.email
-      // });
-      // this.messages.push({
-      //   message: 'asfasfasfasf',
-      //   recipient: this.channel.email,
-      //   sendDate: new Date(),
-      //   sender: this.user.email
-      // });
-      // this.messages.push({
-      //   message: 'asfasfasfasf',
-      //   recipient: this.user.email,
-      //   sendDate: new Date(),
-      //   sender: this.channel.email
-      // });
-      // this.messages.push({
-      //   message: 'asfasfasfasf',
-      //   recipient: this.channel.email,
-      //   sendDate: new Date(),
-      //   sender: this.user.email
-      // });
     });
   }
 
