@@ -26,14 +26,19 @@ export class ChannelsComponent implements OnInit {
       this.channels = users.filter(user => user.email !== this.user.email).map(this.map);
     });
 
-    this.chatService.connectedUser$.subscribe(userId => {
-      const connectedChannel = this.channels.find(channel => channel.id === userId);
+    this.chatService.connectedUser$.subscribe(user => {
+      const connectedChannel = this.channels.find(channel => channel.id === user.email);
+
       if (connectedChannel) {
         connectedChannel.online = true;
+      } else if (this.user.email !== user.email) {
+        const newChannel = this.map(user)
+        newChannel.online = true;
+        this.channels.push(newChannel);
       }
     });
-    this.chatService.disconnectedUser$.subscribe(userId => {
-      const connectedChannel = this.channels.find(channel => channel.id === userId);
+    this.chatService.disconnectedUser$.subscribe(user => {
+      const connectedChannel = this.channels.find(channel => channel.id === user.email);
       if (connectedChannel) {
         connectedChannel.online = false;
       }

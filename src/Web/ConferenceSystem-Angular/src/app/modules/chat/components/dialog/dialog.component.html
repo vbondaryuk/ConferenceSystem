@@ -1,8 +1,7 @@
-<!--<p>selected user: {{(selectedUserSubject | async)?.firstName}}</p>-->
 <div class="flex-wrapper channel" *ngIf="channel">
   <div class="channel-header">
     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAG6SURBVFhH7ZW7Sh5BGEB/CVgoMYWakD6NYpE38NJYmZgg5CnECwERq2AVxedQKzUWPkE6SUJab9ilMKJBooVRzxl2YMF/87s6PySwBw7MfPPNN7sze6lVVPyPdOM8fsGzTNvGurCpjOEvvC7wBN9iU3DxK3ShNRzA9kzbxhwz5w0m5SnGO39voIAZNOcUkx6H52vh9dD7O5/Q3A+hl4hvaFG3uhGDaO7X0EtE3H7PuxGP0VznJMOnu+wFHIdeInzPLer2NiIewXboJWIOLVrmIZwNvUQ8w59oYV+1IlzUnCP01U2KX7hLdIENdKs9bx3CTXTMnNfYFPwa/kEXqqdjTfsUv8I9rLdw3l0cwWS04CLGBS5wEnsw/gt6s5hj5vg/+IjOfTBLaNFz/J21V7EVI7aNOWaOubYX8EGMYiw6jP0YP0pb2JZp25hj5pgbL8Kjuxfe1SFaZNxAxkv8gcY/Z9o25lhkAo3vY3637sw7tMB3fGQgxws8QMfVtrE8znGu4749pVlBJ0+F3m2eowuo7XpMozWWQ68kbp2TfcKL6Mwsog+tsRN6JYlPfEfo3Y8naA1rVVT8i9RqN5sJjo2Z1ZizAAAAAElFTkSuQmCC" />
-    <aside>Channel: {{channel?.firstName}}</aside>
+    <aside>Channel: {{channel?.name}}</aside>
   </div>
   <div class="channel-history">
     <div *ngFor="let message of messages" class="message">
@@ -25,43 +24,3 @@
     </form>
   </div>
 </div>
-
-
-<!--<div class="container-fluid">-->
-
-<!--<h1>Send some basic messages</h1>-->
-
-
-<!--<div class="row">-->
-<!--<form class="form-inline" (ngSubmit)="sendMessage()" #messageForm="ngForm">-->
-<!--<div class="form-group">-->
-<!--<label class="sr-only" for="username">UserName</label>-->
-<!--<input type="text" class="form-control" id="username" placeholder="set your name" name="message" [(ngModel)]="userName" required>-->
-<!--<label class="sr-only" for="message">Message</label>-->
-<!--<input type="text" class="form-control" id="message" placeholder="your message..." name="message" [(ngModel)]="message" required>-->
-<!--</div>-->
-<!--<button type="submit" class="btn btn-primary" [disabled]="!messageForm.valid">Send SignalR Message</button>-->
-<!--</form>-->
-<!--</div>-->
-<!--<div class="row" *ngIf="messages.length > 0">-->
-<!--<div class="table-responsive">-->
-<!--<table class="table table-striped">-->
-<!--<thead>-->
-<!--<tr>-->
-<!--<th>#</th>-->
-<!--<th>Messages</th>-->
-<!--</tr>-->
-<!--</thead>-->
-<!--<tbody>-->
-<!--<tr *ngFor="let message of messages; let i = index">-->
-<!--<td>{{i + 1}}</td>-->
-<!--<td>{{message}}</td>-->
-<!--</tr>-->
-<!--</tbody>-->
-<!--</table>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="row" *ngIf="messages.length <= 0">-->
-<!--<span>No messages</span>-->
-<!--</div>-->
-<!--</div>-->

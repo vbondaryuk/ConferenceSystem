@@ -15,8 +15,8 @@ export class ChatService {
   private userSubject = new BehaviorSubject<User>(null);
   private channelSubject = new Subject<Channel>();
   private messageSubject = new Subject<Message>();
-  private connectedUserIdSubject = new Subject<string>();
-  private disconnectedUserIdSubject = new Subject<string>();
+  private connectedUserIdSubject = new Subject<User>();
+  private disconnectedUserIdSubject = new Subject<User>();
 
   currentUser$ = this.userSubject.asObservable();
   channel$ = this.channelSubject.asObservable();
@@ -63,16 +63,16 @@ export class ChatService {
 
     // this.hubConnection.send('requestConnectedClients');
 
-    this.hubConnection.on('connectedUsers', (userIds: Array<string>) => {
-      userIds.forEach(userId => this.connectedUserIdSubject.next(userId));
+    this.hubConnection.on('connectedUsers', (users: Array<User>) => {
+      users.forEach(user => this.connectedUserIdSubject.next(user));
     });
 
-    this.hubConnection.on('onConnectedUser', (userId: string) => {
-      this.connectedUserIdSubject.next(userId);
+    this.hubConnection.on('onConnectedUser', (user: User) => {
+      this.connectedUserIdSubject.next(user);
     });
 
-    this.hubConnection.on('onDisconnectedUser', (userId: string) => {
-      this.disconnectedUserIdSubject.next(userId);
+    this.hubConnection.on('onDisconnectedUser', (user: User) => {
+      this.disconnectedUserIdSubject.next(user);
     });
 
     this.hubConnection.on('receiveMessage', (message: Message) => {

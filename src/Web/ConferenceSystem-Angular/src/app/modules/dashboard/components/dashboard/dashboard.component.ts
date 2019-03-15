@@ -3,6 +3,7 @@ import {AuthenticationService} from '../../../../shared/services/authentication.
 import {UserService} from '../../../../shared/services/user.service';
 import {User} from '../../../../shared/models/user';
 import {Router} from '@angular/router';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +12,7 @@ import {Router} from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
   loggedIn: boolean;
-  user: User;
+  user$: Observable<User>;
 
   constructor(
     private router: Router,
@@ -22,7 +23,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.getUser().subscribe(user => this.user = user);
+    this.user$ = this.userService.getUser();
   }
 
   public logout() {

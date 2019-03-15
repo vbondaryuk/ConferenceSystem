@@ -28,7 +28,7 @@ namespace ConferenceSystem.Api.Controllers
         public async Task<IActionResult> UserInfo()
         {
             var user = await _authenticationManager.GetCurrentUser();
-            var userModel = Map(user);
+            var userModel = UserMapper.Map(user);
 
             return Ok(userModel);
         }
@@ -38,19 +38,9 @@ namespace ConferenceSystem.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var users = await _userService.GetAsync();
-            var userModels = users.Select(Map);
+            var userModels = users.Select(UserMapper.Map);
 
             return Ok(userModels);
-        }
-
-        public static UserViewModel Map(User user)
-        {
-            return new UserViewModel
-            {
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName
-            };
         }
     }
 }
